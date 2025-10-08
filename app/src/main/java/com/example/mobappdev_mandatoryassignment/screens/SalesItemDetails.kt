@@ -37,7 +37,7 @@ fun SalesItemDetails(
                     ContentColor = MaterialTheme.colorScheme.primary
                 )
             ),
-            description = { Text("SalesItem details") }
+            description = { Text("SalesItem details!") }
         }) {
 
     }
