@@ -48,7 +48,7 @@ import java.time.LocalDateTime
 fun SalesItemList(
     salesItems: List<SalesItem>,
     errorMessage: String,
-//    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier,
     onSalesItemSelected: (SalesItem) -> Unit = {},
     onSalesItemDeleted: (SalesItem) -> Unit = {},
     onSalesItemsReload: () -> Unit = {},

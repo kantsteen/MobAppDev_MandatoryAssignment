@@ -9,6 +9,9 @@ interface SalesItemService {
     @GET("salesItem")
     fun getAllSalesItems(): Call<List<SalesItem>>
 
+    @DELETE("salesItem/{salesItemId}")
+    fun deleteSalesItem(@Path("salesItemId") id: Int): Call<SalesItem>
+
     // TODO
     // rest of interface
 

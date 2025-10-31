@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberOverscrollEffect
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -25,9 +26,15 @@ import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.mobappdev_mandatoryassignment.model.SalesItem
 import com.example.mobappdev_mandatoryassignment.model.SalesItemsViewModel
+import com.example.mobappdev_mandatoryassignment.repository.filterSalesItemsByPrice
+import com.example.mobappdev_mandatoryassignment.screens.SalesItemList
 import com.example.mobappdev_mandatoryassignment.ui.theme.MobAppDev_MandatoryAssignmentTheme
 import kotlin.String
 import kotlin.collections.List
@@ -41,6 +48,7 @@ class MainActivity : ComponentActivity() {
 //                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 //                SalesItem("BMW", 100000)
 //                SalesItems()
+                MainScreen()
 
 
             }
@@ -53,12 +61,42 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(
     modifier: Modifier = Modifier,
     viewModel: SalesItemsViewModel = SalesItemsViewModel()
-    ) {
-val navController = rememberNavController()
-val salesItems = viewModel.salesItems.value
-val errorMessage = viewModel.errorMessage.value
-}
+) {
+    val navController = rememberNavController()
+    val salesItems = viewModel.salesItems.value
+    val errorMessage = viewModel.errorMessage.value
 
+    NavHost(navController = navController, startDestination = NavRoutes.SalesItemList.route) {
+        composable(NavRoutes.SalesItemList.route) {
+            SalesItemList(
+                modifier = modifier,
+                salesItems = salesItems,
+                errorMessage = errorMessage,
+                onSalesItemSelected = { salesItem ->
+                    navController.navigate((NavRoutes.SalesItemDetails.route) + "/${salesItem.id}") },
+                onSalesItemDeleted = { salesItem -> viewModel.removeSalesItem(salesItem) },
+                onAdd = { navController.navigate(NavRoutes.SalesItemAdd.route) },
+                sortByTitle = { viewModel.sortByTitle(ascending = it) },
+                sortByPrice = { viewModel.sortByPrice(ascending = it) },
+                filterByTitle = { viewModel.filterByTitle(it) },
+                onSalesItemsReload = { viewModel.getSalesItems() },
+                salesItemsLoading = viewModel.isLoadingSalesItem.value
+            )
+        }
+        composable(
+            NavRoutes.SalesItemDetails.route + "/$salesItemId",
+            arguments = listOf(navArgument("salesItemId") {type = NavType.IntType})
+        ) {backstackEntry ->
+            val salesItemId = backstackEntry.arguments?.getInt("salesItemId")
+            val salesItem = salesItems.find { it.id == salesItemId }
+
+        }
+
+
+    }
+}
+}
+//{ salesItem -> navController.navigate(NavRoutes.Details.route + "/@{salesItem.id}") },
 
 //@Composable
 //fun SalesItem(description: String, price: Int, modifier: Modifier = Modifier) {

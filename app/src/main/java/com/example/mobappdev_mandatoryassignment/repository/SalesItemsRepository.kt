@@ -55,30 +55,50 @@ class SalesItemsRepository {
         })
     }
 
-    fun add(){
+    fun add() {
         TODO("Implement add")
     }
 
-    fun delete(){
-        TODO("Implement delete")
+    fun deleteSalesItem(id: Int) {
+        Log.d("APPLE", "Delete: $id")
+        salesItemService.deleteSalesItem(id).enqueue(object : Callback<SalesItem> {
+            override fun onResponse(call: Call<SalesItem?>, response: Response<SalesItem?>) {
+                if (response.isSuccessful) {
+                    Log.d("APPLE", "Delete: " + response.body())
+                    errorMessage.value = ""
+                    getSalesItems()
+                } else {
+                    val message = response.code().toString() + " " + response.body()
+                    errorMessage.value = message
+                    Log.e("APPLE", "Not Deleted")
+                }
+            }
+
+            override fun onFailure(call: Call<SalesItem?>, t: Throwable) {
+                val message = t.message ?: "No connection to back-end"
+                errorMessage.value = message
+                Log.e("APPLE", "Update $message")
+            }
+        })
+    }
     }
 
-    fun update(){
+    fun update() {
         TODO("Implement update")
     }
 
-    fun sortSalesItemsByTitle(){
+    fun sortSalesItemsByTitle() {
         TODO("Implement sortSalesItemsByTitle")
     }
 
-    fun sortSalesItemsByPrice(){
+    fun sortSalesItemsByPrice() {
         TODO("Implement sortSalesItemsByPrice")
     }
 
-    fun filterSalesItemsByPrice(){
+    fun filterSalesItemsByPrice() {
         TODO("Implement filterSalesItemsByPrice")
     }
-}
+
 
 
 
