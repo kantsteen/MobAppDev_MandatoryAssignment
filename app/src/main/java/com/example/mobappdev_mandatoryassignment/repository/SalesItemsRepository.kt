@@ -55,8 +55,26 @@ class SalesItemsRepository {
         })
     }
 
-    fun add() {
-        TODO("Implement add")
+    fun addSalesItem(salesItem: SalesItem) {
+        salesItemService.addSalesItem(salesItem).enqueue(object : Callback<SalesItem> {
+            override fun onResponse(call: Call<SalesItem?>, response: Response<SalesItem?>) {
+                if (response.isSuccessful) {
+                    Log.d("APPLE", "Added: " + response.body())
+                    getSalesItems()
+                    errorMessage.value = ""
+                } else {
+                    val message = response.code().toString() + " " + response.message()
+                    errorMessage.value = message
+                    Log.e("APPLE", message)
+                }
+            }
+
+            override fun onFailure(call: Call<SalesItem?>, t: Throwable) {
+                val message = t.message ?: "No connection to back-end"
+                errorMessage.value = message
+                Log.e("APPLE", message)
+            }
+        })
     }
 
     fun deleteSalesItem(id: Int) {
@@ -77,27 +95,75 @@ class SalesItemsRepository {
             override fun onFailure(call: Call<SalesItem?>, t: Throwable) {
                 val message = t.message ?: "No connection to back-end"
                 errorMessage.value = message
-                Log.e("APPLE", "Update $message")
+                Log.e("APPLE", "Not deleted $message")
             }
         })
     }
+
+    fun updateSalesItem(salesItemId: Int, salesItem: SalesItem) {
+        Log.d("APPLE", "Update: $salesItemId $salesItem")
+        SalesItemService.updateSalesItem(salesItemId, salesItem).enqueue(object : Callback<SalesItem> {
+                override fun onResponse(call: Call<SalesItem?>, response: Response<SalesItem?>) {
+                    if (response.isSuccessful) {
+                        Log.d("APPLE", "Update: " + response.body())
+                        errorMessage.value = ""
+                        Log.d("APPLE", "Update succesful")
+                        getSalesItems()
+                    } else {
+                        val message = response.code().toString() + " " + response.body()
+                        errorMessage.value = message
+                    }
+                }
+
+                override fun onFailure(call: Call<SalesItem?>, t: Throwable) {
+                    val message = t.message ?: "No connection to back-end"
+                    errorMessage.value = message
+                    Log.e("APPLE", "Update $message")
+                }
+            })
     }
 
-    fun update() {
-        TODO("Implement update")
+    fun sortSalesItemsByDescription(ascending: Boolean) {
+        Log.d("APPLE", "Sort by title")
+        if (ascending) {
+            salesItems.value = salesItems.value.sortedBy { it.description }
+        } else {
+            salesItems.value = salesItems.value.sortedByDescending { it.description }
+
+        }
     }
 
-    fun sortSalesItemsByTitle() {
-        TODO("Implement sortSalesItemsByTitle")
+    fun sortSalesItemsByPrice(ascending: Boolean) {
+        Log.d("APPLE", "Sort by price")
+        if (ascending) {
+            salesItems.value = salesItems.value.sortedBy { it.price }
+        } else {
+            salesItems.value = salesItems.value.sortedByDescending { it.price }
+        }
+
     }
 
-    fun sortSalesItemsByPrice() {
-        TODO("Implement sortSalesItemsByPrice")
+    fun filterSalesItemsByDescription(descFragment: String) {
+        if (descFragment.isEmpty()) {
+            getSalesItems()
+            return
+        } else {
+            salesItems.value = salesItems.value.filter { it.description.contains(titleFragment) }
+        }
     }
 
-    fun filterSalesItemsByPrice() {
-        TODO("Implement filterSalesItemsByPrice")
+    fun filterSalesItemsByPrice(minPrice: Double, maxPrice: Double) {
+        if (minPrice == 0.0 && maxPrice == 0.0) {
+            getSalesItems()
+            return
+        } else {
+            salesItems.value = salesItems.value.filter { it.price in minPrice..maxPrice }
+        }
     }
+}
+
+
+
 
 
 

@@ -17,11 +17,36 @@ class SalesItemsViewModel : ViewModel() {
         repository.getSalesItems()
     }
 
-    fun removeSalesItem(salesItem: SalesItem){
+    fun removeSalesItem(salesItem: SalesItem) {
         repository.deleteSalesItem(salesItem.id)
     }
+
+    fun updateSalesItem(salesItemId: Int, salesItem: SalesItem) {
+        repository.updateSalesItem(salesItemId, salesItem)
+    }
+
+    fun addSalesItem(salesItem: SalesItem) {
+        repository.addSalesItem(salesItem)
+    }
+
+    fun sortSalesItemsByDescription(ascending: Boolean) {
+        repository.sortSalesItemsByDescription(ascending)
+    }
+
+    fun sortSalesItemsByPrice(ascending: Boolean) {
+        repository.sortSalesItemsByPrice(ascending)
+    }
+
+    fun filterSalesItemsByDescription(description: String) {
+        repository.filterSalesItemsByDescription(description)
+    }
+
+    fun filterSalesItemsByPrice(minPrice: Double, maxPrice: Double) {
+        repository.filterSalesItemsByPrice(minPrice, maxPrice)
+    }
+}
+
 
 
 
     // TODO()
-}

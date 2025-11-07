@@ -34,8 +34,11 @@ import androidx.navigation.navArgument
 import com.example.mobappdev_mandatoryassignment.model.SalesItem
 import com.example.mobappdev_mandatoryassignment.model.SalesItemsViewModel
 import com.example.mobappdev_mandatoryassignment.repository.filterSalesItemsByPrice
+import com.example.mobappdev_mandatoryassignment.screens.SalesItemAdd
+import com.example.mobappdev_mandatoryassignment.screens.SalesItemDetails
 import com.example.mobappdev_mandatoryassignment.screens.SalesItemList
 import com.example.mobappdev_mandatoryassignment.ui.theme.MobAppDev_MandatoryAssignmentTheme
+import java.time.LocalDateTime
 import kotlin.String
 import kotlin.collections.List
 
@@ -73,7 +76,8 @@ fun MainScreen(
                 salesItems = salesItems,
                 errorMessage = errorMessage,
                 onSalesItemSelected = { salesItem ->
-                    navController.navigate((NavRoutes.SalesItemDetails.route) + "/${salesItem.id}") },
+                    navController.navigate((NavRoutes.SalesItemDetails.route) + "/${salesItem.id}")
+                },
                 onSalesItemDeleted = { salesItem -> viewModel.removeSalesItem(salesItem) },
                 onAdd = { navController.navigate(NavRoutes.SalesItemAdd.route) },
                 sortByTitle = { viewModel.sortByTitle(ascending = it) },
@@ -84,17 +88,46 @@ fun MainScreen(
             )
         }
         composable(
-            NavRoutes.SalesItemDetails.route + "/$salesItemId",
-            arguments = listOf(navArgument("salesItemId") {type = NavType.IntType})
-        ) {backstackEntry ->
+            NavRoutes.SalesItemDetails.route + "/{salesItemId}",
+            arguments = listOf(navArgument("salesItemId") { type = NavType.IntType })
+        ) { backstackEntry ->
             val salesItemId = backstackEntry.arguments?.getInt("salesItemId")
-            val salesItem = salesItems.find { it.id == salesItemId }
-
+            val salesItem = salesItems.find { it.id == salesItemId } ?: SalesItem(
+                description = "Not found",
+                price = 0.0,
+                sellerMail = "",
+                sellerPhone = "",
+                time = LocalDateTime.now(),
+                pictureUrl = ""
+            )
+            SalesItemDetails(
+                salesItem = salesItem,
+                modifier = modifier,
+                onNavigateBack = { navController.popBackStack() },
+                onUpdate = { id: Int, salesItem: SalesItem ->
+                    viewModel.updateSalesItem(
+                        id,
+                        salesItem
+                    )
+                }
+            )
         }
-
-
+        composable(NavRoutes.SalesItemAdd.route) {
+            SalesItemAdd(
+                modifier = modifier,
+                addSalesItem = { salesItem -> viewModel.addSalesItem(salesItem) },
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun SalesItemPreview(){
+    MobAppDev_MandatoryAssignmentTheme {
+        MainScreen()
+    }
 }
 //{ salesItem -> navController.navigate(NavRoutes.Details.route + "/@{salesItem.id}") },
 
