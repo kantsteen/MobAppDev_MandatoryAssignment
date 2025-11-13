@@ -1,13 +1,13 @@
 package com.example.mobappdev_mandatoryassignment.screens
 
 import android.R
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,6 +24,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.mobappdev_mandatoryassignment.model.SalesItem
@@ -34,13 +35,19 @@ import java.time.LocalDateTime
 fun SalesItemDetails(
     salesItem: SalesItem,
     modifier: Modifier = Modifier,
-    onUpdate: (Int, SalesItem) -> Unit = { id: Int, data: SalesItem -> },
+    onUpdate: (Int, SalesItem) -> Unit = { id: Int, data: SalesItem -> }, //TODO ??? Look at BookstoreMVVM2
     onNavigateBack: () -> Unit = {}
 ) {
     var description by remember { mutableStateOf(salesItem.description) }
     var priceStr by remember { mutableStateOf(salesItem.price.toString()) }
+    var time by remember { mutableStateOf(salesItem.time.toString()) }
+    var sellerMail by remember { mutableStateOf(salesItem.sellerMail) }
+    var sellerPhone by remember { mutableStateOf(salesItem.sellerPhone) }
+
+
     Scaffold(
-        modifier = modifier.fillMaxSize(), topBar = {
+        modifier = modifier.fillMaxSize(),
+        topBar = {
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -53,18 +60,36 @@ fun SalesItemDetails(
         Column(modifier = modifier.padding(innerPadding)) {
             // TODO layout for landscape
             // TODO add and details are very similar
-            TextField(
+            OutlinedTextField(
                 onValueChange = { description = it },
                 value = description,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                 modifier = Modifier.fillMaxWidth(),
-                label = { Text("Descriptiom") })
-            TextField(
+                label = { Text("Description") })
+            OutlinedTextField(
                 onValueChange = { priceStr = it },
                 value = priceStr,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth(),
                 label = { Text("Price") })
+            OutlinedTextField(
+                onValueChange = { time = it },
+                value = time,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text("Date") }) // TODO convert from unix to LocalDateTime
+            OutlinedTextField(
+                onValueChange = { sellerMail = it },
+                value = sellerMail,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text("Seller Mail") })
+            OutlinedTextField(
+                onValueChange = { sellerPhone = it },
+                value = sellerPhone,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text("Seller Phone") })
             Row(
                 modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly
             ) {
@@ -80,7 +105,7 @@ fun SalesItemDetails(
                         sellerMail = TODO(),
                         sellerPhone = TODO(),
                         time = TODO(),
-                        pictureUrl = TODO()
+//                        pictureUrl = TODO()
                     )
                     onUpdate(salesItem.id, data)
                     onNavigateBack()
@@ -103,8 +128,8 @@ fun SalesItemDetailsPreview() {
             price = 1000.0,
             sellerMail = "Disney@Disney.com",
             sellerPhone = "12345678",
-            time = LocalDateTime.now(),
-            pictureUrl = "pictureURL"
+            time = 0,
+//            pictureUrl = "pictureURL"
         )
     )
 }

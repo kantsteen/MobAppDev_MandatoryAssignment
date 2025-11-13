@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -50,6 +51,14 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.firebase.auth)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
+//    implementation(libs.androidx.compose.animation.core.lint)
+    implementation(libs.androidx.compose.ui.text)
+    implementation(platform("androidx.compose:compose-bom:2025.01.00")) // keep ONE BOM
+    implementation("androidx.compose.material:material-icons-extended") // icons
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -59,10 +68,13 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
 
-/*
-    comment in if needed
-    implementation("androidx.compose.material:material-icons-extended")
-*/
+
+
+
+    /*
+        comment in if needed
+        implementation("androidx.compose.material:material-icons-extended")
+    */
 
     implementation("com.squareup.retrofit2:retrofit:3.0.0")
     implementation("com.squareup.retrofit2:converter-gson:3.0.0")

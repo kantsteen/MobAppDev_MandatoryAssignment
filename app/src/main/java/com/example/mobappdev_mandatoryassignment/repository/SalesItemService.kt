@@ -6,10 +6,19 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface SalesItemService {
-    @GET("salesItem")
+    @GET("SalesItems")
     fun getAllSalesItems(): Call<List<SalesItem>>
 
-    // TODO
+    @DELETE("SalesItems/{salesItemId}")
+    fun deleteSalesItem(@Path("salesItemId") id: Int): Call<SalesItem>
+
+    @PUT("SalesItems/{salesItemId}")
+    fun updateSalesItem(@Path("salesItemId") id: Int, @Body salesItem: SalesItem): Call<SalesItem>
+
+    @POST("SalesItems")
+    fun addSalesItem(@Body salesItem: SalesItem): Call<SalesItem>
+
+    // TODO?
     // rest of interface
 
 

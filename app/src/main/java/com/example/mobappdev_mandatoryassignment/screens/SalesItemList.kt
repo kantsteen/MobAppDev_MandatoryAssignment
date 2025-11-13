@@ -48,15 +48,16 @@ import java.time.LocalDateTime
 fun SalesItemList(
     salesItems: List<SalesItem>,
     errorMessage: String,
-//    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier,
     onSalesItemSelected: (SalesItem) -> Unit = {},
     onSalesItemDeleted: (SalesItem) -> Unit = {},
     onSalesItemsReload: () -> Unit = {},
-    salesItemsLoading: Boolean,
+    salesItemsLoading: Boolean = false,
     onAdd: () -> Unit = {},
     sortByTitle: (up: Boolean) -> Unit = {},
     sortByPrice: (up: Boolean) -> Unit = {},
-    filterByTitle: (String) -> Unit = {}
+    filterByTitle: (String) -> Unit = {},
+    filterByPrice: (Double) -> Unit = {}
 ) {
     Scaffold(
         modifier = Modifier,
@@ -88,7 +89,8 @@ fun SalesItemList(
             salesItemsLoading = salesItemsLoading,
             onSalesItemSelected = onSalesItemSelected,
             onSalesItemDeleted = onSalesItemDeleted,
-            onFilterByTitle = filterByTitle
+            onFilterByTitle = filterByTitle,
+            onFilterByPrice = filterByPrice
         )
     }
 
@@ -103,11 +105,12 @@ private fun SalesItemListPanel(
     errorMessage: String,
     sortByTitle: (up: Boolean) -> Unit,
     sortByPrice: (up: Boolean) -> Unit,
-    onSalesItemsReload: () -> Unit,
+    onSalesItemsReload: () -> Unit = {},
     salesItemsLoading: Boolean = false,
     onSalesItemSelected: (SalesItem) -> Unit,
     onSalesItemDeleted: (SalesItem) -> Unit,
-    onFilterByTitle: (String) -> Unit
+    onFilterByTitle: (String) -> Unit,
+    onFilterByPrice: (Double) -> Unit
 ) {
     Column(modifier = modifier.padding(8.dp)) {
         if (errorMessage.isNotEmpty()) {
@@ -120,6 +123,7 @@ private fun SalesItemListPanel(
         var sortTitleAscending by remember { mutableStateOf(true) }
         var sortPriceAscending by remember { mutableStateOf(true) }
         var titleFragment by remember { mutableStateOf("") }
+        var priceFragment by remember { mutableStateOf("") }
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             OutlinedTextField(
@@ -128,13 +132,26 @@ private fun SalesItemListPanel(
                 label = { Text("Filter by title") },
                 modifier = Modifier.weight(1f)
             )
-            Button(
+            /*Button(
                 onClick = { onFilterByTitle(titleFragment) },
+                modifier = Modifier.padding(8.dp)
+            ) {
+                Text("Filter")
+            }*/
+            OutlinedTextField(
+                value = priceFragment,
+                onValueChange = { priceFragment = it },
+                label = { Text("Filter by price") },
+                modifier = Modifier.weight(1f)
+            )
+            Button(
+                onClick = { onFilterByTitle(titleFragment); onFilterByPrice(priceFragment.toDouble()) },
                 modifier = Modifier.padding(8.dp)
             ) {
                 Text("Filter")
             }
         }
+
         Row {
             OutlinedButton(
                 modifier = Modifier.padding(top = 3.dp),
@@ -196,6 +213,7 @@ private fun SalesItem(
                 modifier = Modifier.padding(8.dp),
                 text = salesItem.description + " " + salesItem.price.toString()
             )
+            // TODO move delete icon to profile page for user's own listed items
             Icon(
                 imageVector = Icons.Filled.Delete,
                 contentDescription = "Remove" + salesItem.description,
@@ -219,8 +237,8 @@ fun SalesItemListPreview() {
                 price = 1000.00,
                 sellerMail = "pizza@mail.com",
                 sellerPhone = "12345678",
-                time = LocalDateTime.now(),
-                pictureUrl = "URL"
+                time = 0,
+//                pictureUrl = "URL"
             ),
             SalesItem(
                 id = 2,
@@ -228,8 +246,8 @@ fun SalesItemListPreview() {
                 price = 4000.00,
                 sellerMail = "pizza@mail.com",
                 sellerPhone = "12345678",
-                time = LocalDateTime.now(),
-                pictureUrl = "URL"
+                time = 0,
+//                pictureUrl = "URL"
             )
         ),
         errorMessage = "",

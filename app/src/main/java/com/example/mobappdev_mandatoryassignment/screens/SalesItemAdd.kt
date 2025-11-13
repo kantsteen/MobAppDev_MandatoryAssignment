@@ -1,7 +1,6 @@
 package com.example.mobappdev_mandatoryassignment.screens
 
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,6 +23,6 @@ fun SalesItemAdd(
     var sellerEmail by remember { mutableStateOf("") }
     var sellerPhone by remember { mutableStateOf("") }
     var time by remember { mutableStateOf(LocalDateTime.now()) }
-    var pictureUrl by remember { mutableStateOf("") }
+//    var pictureUrl by remember { mutableStateOf("") }
 
 }
