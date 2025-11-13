@@ -8,7 +8,7 @@ data class SalesItem(
     val price: Double,
     val sellerMail: String,
     val sellerPhone: String,
-    val time: LocalDateTime,
+    val time: Int,
 //    val pictureUrl: String
 ) {
     constructor(
@@ -16,7 +16,7 @@ data class SalesItem(
         price: Double,
         sellerMail: String,
         sellerPhone: String,
-        time: LocalDateTime,
+        time: Int,
 //        pictureUrl: String
     ) : this(
         id = -1, description, price, sellerMail, sellerPhone, time, /*pictureUrl*/

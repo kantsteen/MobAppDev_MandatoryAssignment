@@ -14,11 +14,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.mobappdev_mandatoryassignment.model.SalesItem
 import com.example.mobappdev_mandatoryassignment.model.SalesItemsViewModel
+import com.example.mobappdev_mandatoryassignment.screens.AuthScreen
 import com.example.mobappdev_mandatoryassignment.screens.SalesItemAdd
 import com.example.mobappdev_mandatoryassignment.screens.SalesItemDetails
 import com.example.mobappdev_mandatoryassignment.screens.SalesItemList
 import com.example.mobappdev_mandatoryassignment.ui.theme.MobAppDev_MandatoryAssignmentTheme
-import java.time.LocalDateTime
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,7 +76,7 @@ fun MainScreen(
                 price = 0.0,
                 sellerMail = "",
                 sellerPhone = "",
-                time = LocalDateTime.now(),
+                time = 0,
 //                pictureUrl = ""
             )
             SalesItemDetails(
@@ -96,6 +96,10 @@ fun MainScreen(
                 modifier = modifier,
                 addSalesItem = { salesItem -> viewModel.addSalesItem(salesItem) },
                 onNavigateBack = { navController.popBackStack() }
+            )
+        }
+        composable(NavRoutes.Authentication.route) {
+            AuthScreen(
             )
         }
     }

@@ -237,7 +237,7 @@ fun SalesItemListPreview() {
                 price = 1000.00,
                 sellerMail = "pizza@mail.com",
                 sellerPhone = "12345678",
-                time = LocalDateTime.of(2025, 11, 13, 13, 30),
+                time = 0,
 //                pictureUrl = "URL"
             ),
             SalesItem(
@@ -246,7 +246,7 @@ fun SalesItemListPreview() {
                 price = 4000.00,
                 sellerMail = "pizza@mail.com",
                 sellerPhone = "12345678",
-                time = LocalDateTime.of(2025, 11, 13, 13, 30),
+                time = 0,
 //                pictureUrl = "URL"
             )
         ),
