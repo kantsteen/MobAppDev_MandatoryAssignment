@@ -33,7 +33,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-
+// CHECK BRANCH
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuthScreen(
