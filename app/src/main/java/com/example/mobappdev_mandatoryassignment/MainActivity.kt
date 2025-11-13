@@ -4,14 +4,17 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.mobappdev_mandatoryassignment.model.AuthViewModel
 import com.example.mobappdev_mandatoryassignment.model.SalesItem
 import com.example.mobappdev_mandatoryassignment.model.SalesItemsViewModel
 import com.example.mobappdev_mandatoryassignment.screens.AuthScreen
@@ -41,13 +44,18 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
-    viewModel: SalesItemsViewModel = SalesItemsViewModel()
+    salesItemsViewModel: SalesItemsViewModel = SalesItemsViewModel(),
+    authViewModel: AuthViewModel = viewModel()
 ) {
     val navController = rememberNavController()
-    val salesItems = viewModel.salesItems.value
-    val errorMessage = viewModel.errorMessage.value
+    val salesItems = salesItemsViewModel.salesItems.value
+    val errorMessage = salesItemsViewModel.errorMessage.value
 
-    NavHost(navController = navController, startDestination = NavRoutes.SalesItemList.route) {
+    NavHost(
+        navController = navController,
+        startDestination = NavRoutes.SalesItemList.route,
+        modifier = Modifier.fillMaxSize()
+    ) {
         composable(NavRoutes.SalesItemList.route) {
             SalesItemList(
                 modifier = modifier,
@@ -56,14 +64,14 @@ fun MainScreen(
                 onSalesItemSelected = { salesItem ->
                     navController.navigate((NavRoutes.SalesItemDetails.route) + "/${salesItem.id}")
                 },
-                onSalesItemDeleted = { salesItem -> viewModel.removeSalesItem(salesItem) },
+                onSalesItemDeleted = { salesItem -> salesItemsViewModel.removeSalesItem(salesItem) },
                 onAdd = { navController.navigate(NavRoutes.SalesItemAdd.route) },
-                sortByTitle = { viewModel.sortSalesItemsByDescription(ascending = it) },
-                sortByPrice = { viewModel.sortSalesItemsByPrice(ascending = it) },
-                filterByTitle = { viewModel.filterSalesItemsByDescription(it) },
-                filterByPrice = { viewModel.filterSalesItemsByPrice(minPrice = it, maxPrice = it) },
-                onSalesItemsReload = { viewModel.getSalesItems() },
-                salesItemsLoading = viewModel.isLoadingSalesItem.value
+                sortByTitle = { salesItemsViewModel.sortSalesItemsByDescription(ascending = it) },
+                sortByPrice = { salesItemsViewModel.sortSalesItemsByPrice(ascending = it) },
+                filterByTitle = { salesItemsViewModel.filterSalesItemsByDescription(it) },
+                filterByPrice = { salesItemsViewModel.filterSalesItemsByPrice(minPrice = it, maxPrice = it) },
+                onSalesItemsReload = { salesItemsViewModel.getSalesItems() },
+                salesItemsLoading = salesItemsViewModel.isLoadingSalesItem.value
             )
         }
         composable(
@@ -84,7 +92,7 @@ fun MainScreen(
                 modifier = modifier,
                 onNavigateBack = { navController.popBackStack() },
                 onUpdate = { id: Int, salesItem: SalesItem ->
-                    viewModel.updateSalesItem(
+                    salesItemsViewModel.updateSalesItem(
                         id,
                         salesItem
                     )
@@ -94,12 +102,17 @@ fun MainScreen(
         composable(NavRoutes.SalesItemAdd.route) {
             SalesItemAdd(
                 modifier = modifier,
-                addSalesItem = { salesItem -> viewModel.addSalesItem(salesItem) },
+                addSalesItem = { salesItem -> salesItemsViewModel.addSalesItem(salesItem) },
                 onNavigateBack = { navController.popBackStack() }
             )
         }
         composable(NavRoutes.Authentication.route) {
             AuthScreen(
+                user = authViewModel.user,
+                message = authViewModel.message,
+                signIn = { email, password -> authViewModel.signIn(email, password) },
+                register = authViewModel::register,
+                navigateToNextScreen = { navController.navigate(NavRoutes.SalesItemList.route) }
             )
         }
     }

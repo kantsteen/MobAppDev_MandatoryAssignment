@@ -58,7 +58,8 @@ dependencies {
 //    implementation(libs.androidx.compose.animation.core.lint)
     implementation(libs.androidx.compose.ui.text)
     implementation(platform("androidx.compose:compose-bom:2025.01.00")) // keep ONE BOM
-    implementation("androidx.compose.material:material-icons-extended") // icons
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation(libs.androidx.material3) // icons
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

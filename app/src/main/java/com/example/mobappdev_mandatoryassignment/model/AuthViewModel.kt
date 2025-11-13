@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 class AuthViewModel : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
     var user: FirebaseUser? by mutableStateOf(auth.currentUser)
+    val isLoggedIn = mutableStateOf(auth.currentUser != null)
     var message by mutableStateOf("")
 
     fun signIn(email: String, password: String) {

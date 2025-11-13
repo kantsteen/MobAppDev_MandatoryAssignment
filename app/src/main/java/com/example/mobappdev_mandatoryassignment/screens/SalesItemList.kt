@@ -39,6 +39,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.mobappdev_mandatoryassignment.components.AppTopBar
+import com.example.mobappdev_mandatoryassignment.model.AuthViewModel
 import com.example.mobappdev_mandatoryassignment.model.SalesItem
 import java.time.LocalDateTime
 
@@ -49,11 +51,14 @@ fun SalesItemList(
     salesItems: List<SalesItem>,
     errorMessage: String,
     modifier: Modifier = Modifier,
+    authViewModel: AuthViewModel? = null,
     onSalesItemSelected: (SalesItem) -> Unit = {},
     onSalesItemDeleted: (SalesItem) -> Unit = {},
     onSalesItemsReload: () -> Unit = {},
     salesItemsLoading: Boolean = false,
     onAdd: () -> Unit = {},
+    onLoginClick: () -> Unit = {},
+    onProfileClick: () -> Unit = {},
     sortByTitle: (up: Boolean) -> Unit = {},
     sortByPrice: (up: Boolean) -> Unit = {},
     filterByTitle: (String) -> Unit = {},
@@ -62,13 +67,24 @@ fun SalesItemList(
     Scaffold(
         modifier = Modifier,
         topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                title = { Text("Sales item list") }
+            AppTopBar(
+                title = "Sales Items",
+                authViewModel = authViewModel,
+                onLoginClick = onLoginClick,
+                onLogoutClick = onLoginClick,  // Navigate to login after logout
+                onProfileClick = onProfileClick
             )
+//                title = { Text("Sales item list")
+//                    /*val navController = rememberNavController()
+//                        val navBackStackEntry by navController.currentBackStackEntryAsState()
+//                        val currentDestination = navBackStackEntry?.destination?.route
+//                        val title = when(currentDestination) {
+//                            "profile" -> "Profile"
+//                            "friendslist" -> "Friends"
+//                            else -> null
+//                        }
+//                        title?.let { Text(it) }*/}
+
         },
         floatingActionButtonPosition = FabPosition.EndOverlay,
         floatingActionButton = {
