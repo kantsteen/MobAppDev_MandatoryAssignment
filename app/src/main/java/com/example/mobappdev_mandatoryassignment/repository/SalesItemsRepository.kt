@@ -11,7 +11,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class SalesItemsRepository {
-    private val baseUrl = "https://anbo-salesitems.azurewebsites.net/api/SalesItems"
+    private val baseUrl = "https://anbo-salesitems.azurewebsites.net/api/"
     private val salesItemService: SalesItemService
     val salesItems: MutableState<List<SalesItem>> = mutableStateOf(listOf())
     val isLoadingBooks = mutableStateOf(false)
@@ -102,7 +102,7 @@ class SalesItemsRepository {
 
     fun updateSalesItem(salesItemId: Int, salesItem: SalesItem) {
         Log.d("APPLE", "Update: $salesItemId $salesItem")
-        SalesItemService.updateSalesItem(salesItemId, salesItem).enqueue(object : Callback<SalesItem> {
+        salesItemService.updateSalesItem(salesItemId, salesItem).enqueue(object : Callback<SalesItem> {
                 override fun onResponse(call: Call<SalesItem?>, response: Response<SalesItem?>) {
                     if (response.isSuccessful) {
                         Log.d("APPLE", "Update: " + response.body())
@@ -148,7 +148,7 @@ class SalesItemsRepository {
             getSalesItems()
             return
         } else {
-            salesItems.value = salesItems.value.filter { it.description.contains(titleFragment) }
+            salesItems.value = salesItems.value.filter { it.description.contains(descFragment) }
         }
     }
 

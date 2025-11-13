@@ -1,9 +1,7 @@
 package com.example.mobappdev_mandatoryassignment.model
 
-import android.R
 import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.State
-import com.example.mobappdev_mandatoryassignment.repository.SalesItemService
 import com.example.mobappdev_mandatoryassignment.repository.SalesItemsRepository
 
 class SalesItemsViewModel : ViewModel() {

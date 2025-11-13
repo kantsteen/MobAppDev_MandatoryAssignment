@@ -7,12 +7,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -80,7 +78,7 @@ fun SalesItemDetails(
                         sellerMail = TODO(),
                         sellerPhone = TODO(),
                         time = TODO(),
-                        pictureUrl = TODO()
+//                        pictureUrl = TODO()
                     )
                     onUpdate(salesItem.id, data)
                     onNavigateBack()
@@ -103,8 +101,8 @@ fun SalesItemDetailsPreview() {
             price = 1000.0,
             sellerMail = "Disney@Disney.com",
             sellerPhone = "12345678",
-            time = LocalDateTime.now(),
-            pictureUrl = "pictureURL"
+            time = LocalDateTime.of(2025, 11, 13, 13, 30),
+//            pictureUrl = "pictureURL"
         )
     )
 }

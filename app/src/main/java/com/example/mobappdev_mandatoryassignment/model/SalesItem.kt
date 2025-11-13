@@ -9,7 +9,7 @@ data class SalesItem(
     val sellerMail: String,
     val sellerPhone: String,
     val time: LocalDateTime,
-    val pictureUrl: String
+//    val pictureUrl: String
 ) {
     constructor(
         description: String,
@@ -17,12 +17,12 @@ data class SalesItem(
         sellerMail: String,
         sellerPhone: String,
         time: LocalDateTime,
-        pictureUrl: String
+//        pictureUrl: String
     ) : this(
-        id = -1, description, price, sellerMail, sellerPhone, time, pictureUrl
+        id = -1, description, price, sellerMail, sellerPhone, time, /*pictureUrl*/
     )
 
     override fun toString(): String {
-        return "$id, $description, $price, $sellerMail, $sellerPhone, $time, $pictureUrl"
+        return "$id, $description, $price, $sellerMail, $sellerPhone, $time, /*pictureUrl*/"
     }
 }

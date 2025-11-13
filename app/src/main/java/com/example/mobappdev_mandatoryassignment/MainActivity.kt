@@ -4,28 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberOverscrollEffect
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -33,14 +14,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.mobappdev_mandatoryassignment.model.SalesItem
 import com.example.mobappdev_mandatoryassignment.model.SalesItemsViewModel
-import com.example.mobappdev_mandatoryassignment.repository.filterSalesItemsByPrice
 import com.example.mobappdev_mandatoryassignment.screens.SalesItemAdd
 import com.example.mobappdev_mandatoryassignment.screens.SalesItemDetails
 import com.example.mobappdev_mandatoryassignment.screens.SalesItemList
 import com.example.mobappdev_mandatoryassignment.ui.theme.MobAppDev_MandatoryAssignmentTheme
 import java.time.LocalDateTime
-import kotlin.String
-import kotlin.collections.List
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,9 +58,10 @@ fun MainScreen(
                 },
                 onSalesItemDeleted = { salesItem -> viewModel.removeSalesItem(salesItem) },
                 onAdd = { navController.navigate(NavRoutes.SalesItemAdd.route) },
-                sortByTitle = { viewModel.sortByTitle(ascending = it) },
-                sortByPrice = { viewModel.sortByPrice(ascending = it) },
-                filterByTitle = { viewModel.filterByTitle(it) },
+                sortByTitle = { viewModel.sortSalesItemsByDescription(ascending = it) },
+                sortByPrice = { viewModel.sortSalesItemsByPrice(ascending = it) },
+                filterByTitle = { viewModel.filterSalesItemsByDescription(it) },
+                filterByPrice = { viewModel.filterSalesItemsByPrice(minPrice = it, maxPrice = it) },
                 onSalesItemsReload = { viewModel.getSalesItems() },
                 salesItemsLoading = viewModel.isLoadingSalesItem.value
             )
@@ -98,7 +77,7 @@ fun MainScreen(
                 sellerMail = "",
                 sellerPhone = "",
                 time = LocalDateTime.now(),
-                pictureUrl = ""
+//                pictureUrl = ""
             )
             SalesItemDetails(
                 salesItem = salesItem,
