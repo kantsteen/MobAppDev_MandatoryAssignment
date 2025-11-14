@@ -58,6 +58,7 @@ fun SalesItemList(
     salesItemsLoading: Boolean = false,
     onAdd: () -> Unit = {},
     onLoginClick: () -> Unit = {},
+    onLogoutClick: () -> Unit = {},
     onProfileClick: () -> Unit = {},
     sortByTitle: (up: Boolean) -> Unit = {},
     sortByPrice: (up: Boolean) -> Unit = {},
@@ -71,7 +72,7 @@ fun SalesItemList(
                 title = "Sales Items",
                 authViewModel = authViewModel,
                 onLoginClick = onLoginClick,
-                onLogoutClick = onLoginClick,  // Navigate to login after logout
+                onLogoutClick = onLogoutClick,  // Navigate to login after logout
                 onProfileClick = onProfileClick
             )
 //                title = { Text("Sales item list")
@@ -230,13 +231,13 @@ private fun SalesItem(
                 text = salesItem.description + " " + salesItem.price.toString()
             )
             // TODO move delete icon to profile page for user's own listed items
-            Icon(
+            /*Icon(
                 imageVector = Icons.Filled.Delete,
                 contentDescription = "Remove" + salesItem.description,
                 modifier = Modifier
                     .padding(8.dp)
                     .clickable { onSalesItemDeleted(salesItem) }
-            )
+            )*/
         }
     }
 

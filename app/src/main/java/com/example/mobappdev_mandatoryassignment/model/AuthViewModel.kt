@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 class AuthViewModel : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
     var user: FirebaseUser? by mutableStateOf(auth.currentUser)
-    val isLoggedIn = mutableStateOf(auth.currentUser != null)
+    var isLoggedIn by mutableStateOf(auth.currentUser != null)
     var message by mutableStateOf("")
 
     fun signIn(email: String, password: String) {
@@ -21,9 +21,11 @@ class AuthViewModel : ViewModel() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     user = auth.currentUser
+                    isLoggedIn = true
                     message = ""
                 } else {
                     user = null
+                    isLoggedIn = false
                     message = "${task.exception?.message ?: "Unknown error"}"
                 }
             }
@@ -32,6 +34,7 @@ class AuthViewModel : ViewModel() {
     fun signOut() {
         user = null
         auth.signOut()
+        isLoggedIn = false
     }
 
     fun register(email: String, password: String) {
@@ -40,9 +43,11 @@ class AuthViewModel : ViewModel() {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         user = auth.currentUser
+                        isLoggedIn = true
                         message = ""
                     } else {
                         user = null
+                        isLoggedIn = false
                         message = "${task.exception?.message ?: "Unknown error"}"
                     }
                 }

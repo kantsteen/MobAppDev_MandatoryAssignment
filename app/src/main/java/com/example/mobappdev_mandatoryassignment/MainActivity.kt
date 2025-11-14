@@ -22,6 +22,7 @@ import com.example.mobappdev_mandatoryassignment.screens.SalesItemAdd
 import com.example.mobappdev_mandatoryassignment.screens.SalesItemDetails
 import com.example.mobappdev_mandatoryassignment.screens.SalesItemList
 import com.example.mobappdev_mandatoryassignment.ui.theme.MobAppDev_MandatoryAssignmentTheme
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,13 +66,25 @@ fun MainScreen(
                     navController.navigate((NavRoutes.SalesItemDetails.route) + "/${salesItem.id}")
                 },
                 onSalesItemDeleted = { salesItem -> salesItemsViewModel.removeSalesItem(salesItem) },
-                onAdd = { navController.navigate(NavRoutes.SalesItemAdd.route) },
+//                onAdd = { navController.navigate(NavRoutes.SalesItemAdd.route) },
                 sortByTitle = { salesItemsViewModel.sortSalesItemsByDescription(ascending = it) },
                 sortByPrice = { salesItemsViewModel.sortSalesItemsByPrice(ascending = it) },
                 filterByTitle = { salesItemsViewModel.filterSalesItemsByDescription(it) },
                 filterByPrice = { salesItemsViewModel.filterSalesItemsByPrice(minPrice = it, maxPrice = it) },
                 onSalesItemsReload = { salesItemsViewModel.getSalesItems() },
-                salesItemsLoading = salesItemsViewModel.isLoadingSalesItem.value
+                salesItemsLoading = salesItemsViewModel.isLoadingSalesItem.value,
+                authViewModel = authViewModel,
+                onLoginClick = { navController.navigate(NavRoutes.Authentication.route)},
+                onLogoutClick = { navController.navigate(NavRoutes.SalesItemList.route)},
+                onProfileClick = { navController.navigate(NavRoutes.Profile.route)},
+                onAdd = {
+                    val user = FirebaseAuth.getInstance().currentUser
+                    if (user == null){
+                        navController.navigate(NavRoutes.Authentication.route)
+                    } else {
+                        navController.navigate(NavRoutes.SalesItemAdd.route)
+                    }
+                }
             )
         }
         composable(
@@ -91,12 +104,7 @@ fun MainScreen(
                 salesItem = salesItem,
                 modifier = modifier,
                 onNavigateBack = { navController.popBackStack() },
-                onUpdate = { id: Int, salesItem: SalesItem ->
-                    salesItemsViewModel.updateSalesItem(
-                        id,
-                        salesItem
-                    )
-                }
+
             )
         }
         composable(NavRoutes.SalesItemAdd.route) {
@@ -112,7 +120,8 @@ fun MainScreen(
                 message = authViewModel.message,
                 signIn = { email, password -> authViewModel.signIn(email, password) },
                 register = authViewModel::register,
-                navigateToNextScreen = { navController.navigate(NavRoutes.SalesItemList.route) }
+                navigateToNextScreen = { navController.navigate(NavRoutes.SalesItemList.route) },
+                onNavigateBack = { navController.popBackStack() }
             )
         }
     }

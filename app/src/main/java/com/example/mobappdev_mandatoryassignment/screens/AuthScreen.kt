@@ -41,13 +41,19 @@ fun AuthScreen(
     message: String = "",
     signIn: (email: String, password: String) -> Unit = { _, _ -> },
     register: (email: String, password: String) -> Unit = { _, _ -> },
-    navigateToNextScreen: () -> Unit = {}
+    navigateToNextScreen: () -> Unit = {},
+    onNavigateBack: () -> Unit = {}
 ) {
-    if (user != null) {
-        LaunchedEffect(Unit) {
+    LaunchedEffect(user) {
+        if (user != null) {
             navigateToNextScreen()
         }
     }
+    /*if (user != null) {
+        LaunchedEffect(Unit) {
+            navigateToNextScreen()
+        }
+    }*/
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -126,8 +132,7 @@ fun AuthScreen(
                     email = email.trim()
                     if (email.isEmpty() || !validateEmail(email)) {
                         emailIsError = true
-                        Log.e("APPLE", "Registration failed $emailIsError" )
-
+                        Log.e("APPLE", "Registration failed $emailIsError")
                         return@Button
                     } else {
                         emailIsError = false
@@ -135,7 +140,7 @@ fun AuthScreen(
                     password = password.trim()
                     if (password.isEmpty()) {
                         passwordIsError = true
-                        Log.e("APPLE", "Registration failed $passwordIsError" )
+                        Log.e("APPLE", "Registration failed $passwordIsError")
                         return@Button
                     } else {
                         passwordIsError = false
@@ -148,7 +153,7 @@ fun AuthScreen(
                     email = email.trim()
                     if (email.isEmpty() || !validateEmail(email)) {
                         emailIsError = true
-                        Log.e("APPLE", "Registration failed $emailIsError" )
+                        Log.e("APPLE", "Registration failed $emailIsError")
                         return@Button
                     } else {
                         emailIsError = false
@@ -156,7 +161,7 @@ fun AuthScreen(
                     password = password.trim()
                     if (password.isEmpty()) {
                         passwordIsError = true
-                        Log.e("APPLE", "Registration failed $passwordIsError" )
+                        Log.e("APPLE", "Registration failed $passwordIsError")
                         return@Button
                     } else {
                         passwordIsError = false
@@ -164,6 +169,9 @@ fun AuthScreen(
                     signIn(email, password)
                 }) {
                     Text("Login")
+                }
+                Button(onClick = { onNavigateBack() }) {
+                    Text("Back")
                 }
             }
         }

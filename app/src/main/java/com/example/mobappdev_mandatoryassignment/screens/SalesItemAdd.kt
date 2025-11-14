@@ -124,7 +124,7 @@ fun SalesItemAdd(
                     val salesItem = SalesItem(
                         description = description,
                         price = priceStr.toDouble(),
-                        time = (System.currentTimeMillis() / 1000).toInt(),
+                        time = (System.currentTimeMillis() / 1000),
                         id = 0,
                         sellerMail = sellerMail,
                         sellerPhone = sellerPhone,

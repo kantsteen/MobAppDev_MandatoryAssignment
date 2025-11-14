@@ -27,17 +27,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import com.example.mobappdev_mandatoryassignment.model.SalesItem
+import com.example.mobappdev_mandatoryassignment.model.SalesItemsViewModel
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SalesItemDetails(
     salesItem: SalesItem,
     modifier: Modifier = Modifier,
-    onUpdate: (Int, SalesItem) -> Unit = { id: Int, data: SalesItem -> }, //TODO ??? Look at BookstoreMVVM2
-    onNavigateBack: () -> Unit = {}
+    onNavigateBack: () -> Unit = {},
+    onItemDeleted: (salesItem: SalesItem) -> Unit = {},
 ) {
+
+    val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+
     var description by remember { mutableStateOf(salesItem.description) }
     var priceStr by remember { mutableStateOf(salesItem.price.toString()) }
     var time by remember { mutableStateOf(salesItem.time.toString()) }
@@ -58,7 +66,9 @@ fun SalesItemDetails(
         }) { innerPadding ->
         // TODO show error message
         Column(modifier = modifier.padding(innerPadding)) {
-            // TODO layout for landscape
+            val orientation = LocalConfiguration.current.orientation
+            val isPortrait = orientation == Configuration.ORIENTATION_PORTRAIT
+            if (isPortrait){
             // TODO add and details are very similar
             OutlinedTextField(
                 onValueChange = { description = it },
@@ -74,7 +84,7 @@ fun SalesItemDetails(
                 label = { Text("Price") })
             OutlinedTextField(
                 onValueChange = { time = it },
-                value = time,
+                value = time.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth(),
                 label = { Text("Date") }) // TODO convert from unix to LocalDateTime
@@ -90,27 +100,48 @@ fun SalesItemDetails(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth(),
                 label = { Text("Seller Phone") })
+
+                Button(onClick = { onNavigateBack() }) {
+                Text("Back")
+            }}
+
+            else {
             Row(
-                modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly
+                modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
             ) {
+                OutlinedTextField(
+                    onValueChange = { description = it },
+                    value = description,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text("Description") })
+                OutlinedTextField(
+                    onValueChange = { priceStr = it },
+                    value = priceStr,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text("Price") })
+                OutlinedTextField(
+                    onValueChange = { time = it },
+                    value = time.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text("Date") }) // TODO convert from unix to LocalDateTime
+                OutlinedTextField(
+                    onValueChange = { sellerMail = it },
+                    value = sellerMail,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text("Seller Mail") })
+                OutlinedTextField(
+                    onValueChange = { sellerPhone = it },
+                    value = sellerPhone,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text("Seller Phone") })
+            }
                 Button(onClick = { onNavigateBack() }) {
                     Text("Back")
-                }
-                Button(onClick = {
-                    // TODO validation
-                    val data = SalesItem(
-                        description = description,
-                        price = priceStr.toDouble(),
-                        id = TODO(),
-                        sellerMail = TODO(),
-                        sellerPhone = TODO(),
-                        time = TODO(),
-//                        pictureUrl = TODO()
-                    )
-                    onUpdate(salesItem.id, data)
-                    onNavigateBack()
-                }) {
-                    Text("Update")
                 }
             }
         }
@@ -118,18 +149,18 @@ fun SalesItemDetails(
 }
 
 
-@Preview
-@Composable
-fun SalesItemDetailsPreview() {
-    SalesItemDetails(
-        salesItem = SalesItem(
-            id = 1,
-            description = "Bicycle",
-            price = 1000.0,
-            sellerMail = "Disney@Disney.com",
-            sellerPhone = "12345678",
-            time = 0,
-//            pictureUrl = "pictureURL"
-        )
-    )
-}
+//@Preview
+//@Composable
+//fun SalesItemDetailsPreview() {
+//    SalesItemDetails(
+//        salesItem = SalesItem(
+//            id = 1,
+//            description = "Bicycle",
+//            price = 1000.0,
+//            sellerMail = "Disney@Disney.com",
+//            sellerPhone = "12345678",
+//            time = LocalDateTime.now(),
+////            pictureUrl = "pictureURL"
+//        )
+//    )
+//}
