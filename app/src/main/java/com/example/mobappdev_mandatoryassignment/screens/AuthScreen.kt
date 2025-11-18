@@ -32,7 +32,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,11 +49,6 @@ fun AuthScreen(
             navigateToNextScreen()
         }
     }
-    /*if (user != null) {
-        LaunchedEffect(Unit) {
-            navigateToNextScreen()
-        }
-    }*/
 
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
@@ -129,7 +123,6 @@ fun AuthScreen(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Button(onClick = {
-                    // TODO same validation for register and sign in
                     email = email.trim()
                     if (email.isEmpty() || !validateEmail(email)) {
                         emailIsError = true

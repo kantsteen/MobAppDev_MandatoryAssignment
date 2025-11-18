@@ -36,7 +36,7 @@ fun SalesItemDetails(
     modifier: Modifier = Modifier,
     onNavigateBack: () -> Unit = {}
 ) {
-    // Convert Unix timestamp (Long in seconds) to readable date string
+    // Convert Unix timestamp to readable date string
     val dateStr = remember(salesItem.time) {
         try {
             salesItem.time?.let {
@@ -48,7 +48,7 @@ fun SalesItemDetails(
                 }
             }
         } catch (e: Exception) {
-            "Invalid date"
+            "${e.message}\nInvalid date"
         }
     }
 

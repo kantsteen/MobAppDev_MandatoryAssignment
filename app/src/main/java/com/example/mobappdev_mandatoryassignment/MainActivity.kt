@@ -30,9 +30,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MobAppDev_MandatoryAssignmentTheme {
-//                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-//                SalesItem("BMW", 100000)
-//                SalesItems()
                 MainScreen()
 
 
@@ -66,7 +63,6 @@ fun MainScreen(
                     navController.navigate((NavRoutes.SalesItemDetails.route) + "/${salesItem.id}")
                 },
                 onSalesItemDeleted = { salesItem -> salesItemsViewModel.removeSalesItem(salesItem) },
-//                onAdd = { navController.navigate(NavRoutes.SalesItemAdd.route) },
                 sortByTitle = { salesItemsViewModel.sortSalesItemsByDescription(ascending = it) },
                 sortByPrice = { salesItemsViewModel.sortSalesItemsByPrice(ascending = it) },
                 filterByTitle = { salesItemsViewModel.filterSalesItemsByDescription(it) },
@@ -75,8 +71,6 @@ fun MainScreen(
                 salesItemsLoading = salesItemsViewModel.isLoadingSalesItem.value,
                 authViewModel = authViewModel,
                 onLoginClick = { navController.navigate(NavRoutes.Authentication.route)},
-                onLogoutClick = { navController.navigate(NavRoutes.SalesItemList.route)},
-                //onProfileClick = { navController.navigate(NavRoutes.Profile.route)},
                 onAdd = {
                     val user = FirebaseAuth.getInstance().currentUser
                     if (user == null){
@@ -98,7 +92,6 @@ fun MainScreen(
                 sellerMail = "",
                 sellerPhone = "",
                 time = 0,
-//                pictureUrl = ""
             )
             SalesItemDetails(
                 salesItem = salesItem,
@@ -135,76 +128,3 @@ fun SalesItemPreview(){
         MainScreen()
     }
 }
-//{ salesItem -> navController.navigate(NavRoutes.Details.route + "/@{salesItem.id}") },
-
-//@Composable
-//fun SalesItem(description: String, price: Int, modifier: Modifier = Modifier) {
-//    Surface(
-//        color = MaterialTheme.colorScheme.primary,
-//        modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp)
-//    ) {
-//        Column(modifier) {
-//
-//            val image = painterResource(R.drawable.bmw_blue_sample)
-//            Image(
-//                painter = image,
-//                contentDescription = null
-//            )
-//            Text(
-//                "$description \n$price DKK",
-//                modifier = modifier
-//            )
-//        }
-//    }
-//}
-//
-//@Composable
-//fun SalesItems(
-//    modifier: Modifier = Modifier,
-//    descriptions: List<String> = List(50) { "$it" }
-//) {
-//    LazyColumn(Modifier.padding(vertical = 4.dp)) {
-//        items(items = descriptions) { description ->
-//            Row(
-//                modifier.fillMaxWidth(),
-//                horizontalArrangement = Arrangement.SpaceEvenly,
-//                verticalAlignment = Alignment.Top){
-//                SalesItem(description = "BMW", 1000)
-//            }
-//        }
-//    }
-//}
-//
-//@Preview
-//@Composable
-//fun SalesItemsPreview() {
-//    MobAppDev_MandatoryAssignmentTheme {
-//        SalesItems()
-//    }
-//}
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun SalesItemPreview() {
-//    Column(modifier = Modifier) {// can maybe be deleted
-//        Row(modifier = Modifier) {
-//            SalesItem("BMW", 100000)
-//        }
-//    }
-//}
-//
-//@Composable
-//fun Greeting(name: String, modifier: Modifier = Modifier) {
-//    Text(
-//        text = "Hello $name!",
-//        modifier = modifier
-//    )
-//}
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun GreetingPreview() {
-//    MobAppDev_MandatoryAssignmentTheme {
-//        Greeting("Android")
-//    }
-//}

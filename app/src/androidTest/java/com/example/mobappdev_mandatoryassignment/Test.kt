@@ -46,7 +46,6 @@ class Test {
                 salesItemsLoading = false,
                 onAdd = {},
                 onLoginClick = {},
-                onLogoutClick = {},
                 sortByTitle = {},
                 sortByPrice = {},
                 filterByTitle = {},
@@ -69,36 +68,5 @@ class Test {
 
         // assert item1 has been deleted
         item1.assertDoesNotExist()
-    }
-
-
-    // TODO
-    @Test
-    fun add_item3() {
-        rule.setContent {
-
-            val salesItems = listOf(
-                SalesItem(1, "Test Item 1", 100, "test1@test.com", "11111111", 12345),
-                SalesItem(2, "Test Item 2", 200, "test2@test.com", "22222222", 12345)
-            )
-
-            SalesItemList(
-                salesItems = salesItems,
-                errorMessage = "",
-                modifier = Modifier,
-                authViewModel = null,
-                onSalesItemSelected = {},
-                onSalesItemDeleted = { },
-                onSalesItemsReload = {},
-                salesItemsLoading = false,
-                onAdd = {},
-                onLoginClick = {},
-                onLogoutClick = {},
-                sortByTitle = {},
-                sortByPrice = {},
-                filterByTitle = {},
-                filterByPrice = {},
-                currentEmail = "test1@test.com"
-            )        }
     }
 }

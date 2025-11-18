@@ -22,10 +22,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,7 +42,6 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.mobappdev_mandatoryassignment.components.AppTopBar
 import com.example.mobappdev_mandatoryassignment.model.AuthViewModel
 import com.example.mobappdev_mandatoryassignment.model.SalesItem
 
@@ -57,8 +59,6 @@ fun SalesItemList(
     salesItemsLoading: Boolean = false,
     onAdd: () -> Unit = {},
     onLoginClick: () -> Unit = {},
-    onLogoutClick: () -> Unit = {},
-    //onProfileClick: () -> Unit = {},
     sortByTitle: (up: Boolean) -> Unit = {},
     sortByPrice: (up: Boolean) -> Unit = {},
     filterByTitle: (String) -> Unit = {},
@@ -68,11 +68,21 @@ fun SalesItemList(
     Scaffold(
         modifier = Modifier,
         topBar = {
-            AppTopBar(
-                title = "Sales Items",
-                authViewModel = authViewModel,
-                onLoginClick = onLoginClick,
-                onLogoutClick = onLogoutClick,  // Navigate to login after logout
+            TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.primary
+                ),
+                title = { Text("Sales Items") },
+                actions = {
+                    val isLoggedIn = authViewModel?.isLoggedIn
+                    if (isLoggedIn == true) {
+                        Button(onClick = { authViewModel.signOut() }) { Text("Log out") }
+                    } else {
+                        Button(onClick = { onLoginClick() }) { Text("Log in") }
+                    }
+                }
+
             )
         },
         floatingActionButtonPosition = FabPosition.EndOverlay,
@@ -224,7 +234,6 @@ private fun SalesItemRow(
                 modifier = Modifier.padding(8.dp),
                 text = salesItem.description + " " + salesItem.price.toString()
             )
-            // TODO move delete icon to profile page for user's own listed items
             Log.d("currentEmail", currentEmail.toString() + " " + salesItem.sellerEmail)
             if (currentEmail != null && currentEmail == salesItem.sellerEmail) {
                 Icon(
@@ -232,7 +241,8 @@ private fun SalesItemRow(
                     contentDescription = "Remove" + salesItem.description,
                     modifier = Modifier
                         .padding(8.dp)
-                        .clickable { onSalesItemDeleted(salesItem) }.testTag("delete_item_button")
+                        .clickable { onSalesItemDeleted(salesItem) }
+                        .testTag("delete_item_button")
                 )
             }
 
@@ -253,7 +263,6 @@ fun SalesItemListPreview() {
                 sellerEmail = "pizza@mail.com",
                 sellerPhone = "12345678",
                 time = 0,
-//                pictureUrl = "URL"
             ),
             SalesItem(
                 id = 2,
@@ -262,7 +271,6 @@ fun SalesItemListPreview() {
                 sellerEmail = "pizza@mail.com",
                 sellerPhone = "12345678",
                 time = 0,
-//                pictureUrl = "URL"
             )
         ),
         errorMessage = "",
