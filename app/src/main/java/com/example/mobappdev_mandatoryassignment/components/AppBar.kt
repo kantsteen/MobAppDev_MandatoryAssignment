@@ -26,8 +26,8 @@ fun AppTopBar(
     authViewModel: AuthViewModel? = null,
     onLoginClick: () -> Unit = {},
     onLogoutClick: () -> Unit = {},
-    onProfileClick: () -> Unit = {},
-    showProfileButton: Boolean = true,
+//    onProfileClick: () -> Unit = {},
+//    showProfileButton: Boolean = true,
 ) {
     val isLoggedIn = authViewModel?.isLoggedIn/*?.value ?: false*/
 
@@ -39,14 +39,14 @@ fun AppTopBar(
         title = { Text(title) },
         actions = {
             // Show profile button only if logged in and showProfileButton is true
-            if (isLoggedIn == true && showProfileButton) {
-                Button(onClick = onProfileClick) {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = "Profile"
-                    )
-                }
-            }
+//            if (isLoggedIn == true && showProfileButton) {
+//                Button(onClick = onProfileClick) {
+//                    Icon(
+//                        imageVector = Icons.Default.Person,
+//                        contentDescription = "Profile"
+//                    )
+//                }
+//            }
             if (isLoggedIn == true){
                 Button(onClick = {
                     authViewModel?.signOut()

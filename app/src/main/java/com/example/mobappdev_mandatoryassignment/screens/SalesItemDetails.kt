@@ -1,6 +1,5 @@
 package com.example.mobappdev_mandatoryassignment.screens
 
-import android.R
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,24 +14,19 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
+import androidx.compose.ui.unit.dp
 import com.example.mobappdev_mandatoryassignment.model.SalesItem
-import com.example.mobappdev_mandatoryassignment.model.SalesItemsViewModel
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import java.util.Date
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,18 +34,26 @@ import java.util.Locale
 fun SalesItemDetails(
     salesItem: SalesItem,
     modifier: Modifier = Modifier,
-    onNavigateBack: () -> Unit = {},
-    onItemDeleted: (salesItem: SalesItem) -> Unit = {},
+    onNavigateBack: () -> Unit = {}
 ) {
+    // Convert Unix timestamp (Long in seconds) to readable date string
+    val dateStr = remember(salesItem.time) {
+        try {
+            salesItem.time?.let {
+                if (it > 0) {
+                    val date = Date(salesItem.time * 1000) // Convert seconds to milliseconds
+                    SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(date)
+                } else {
+                    "No date"
+                }
+            }
+        } catch (e: Exception) {
+            "Invalid date"
+        }
+    }
 
-    val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-
-    var description by remember { mutableStateOf(salesItem.description) }
-    var priceStr by remember { mutableStateOf(salesItem.price.toString()) }
-    var time by remember { mutableStateOf(salesItem.time.toString()) }
-    var sellerMail by remember { mutableStateOf(salesItem.sellerMail) }
-    var sellerPhone by remember { mutableStateOf(salesItem.sellerPhone) }
-
+    val orientation = LocalConfiguration.current.orientation
+    val isPortrait = orientation == Configuration.ORIENTATION_PORTRAIT
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -61,86 +63,127 @@ fun SalesItemDetails(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.primary
                 ),
-                title = { Text("SalesItem Details") })
-
-        }) { innerPadding ->
-        // TODO show error message
-        Column(modifier = modifier.padding(innerPadding)) {
-            val orientation = LocalConfiguration.current.orientation
-            val isPortrait = orientation == Configuration.ORIENTATION_PORTRAIT
-            if (isPortrait){
-            // TODO add and details are very similar
-            OutlinedTextField(
-                onValueChange = { description = it },
-                value = description,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text("Description") })
-            OutlinedTextField(
-                onValueChange = { priceStr = it },
-                value = priceStr,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text("Price") })
-            OutlinedTextField(
-                onValueChange = { time = it },
-                value = time.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text("Date") }) // TODO convert from unix to LocalDateTime
-            OutlinedTextField(
-                onValueChange = { sellerMail = it },
-                value = sellerMail,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text("Seller Mail") })
-            OutlinedTextField(
-                onValueChange = { sellerPhone = it },
-                value = sellerPhone,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text("Seller Phone") })
-
-                Button(onClick = { onNavigateBack() }) {
-                Text("Back")
-            }}
-
-            else {
-            Row(
-                modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-            ) {
+                title = { Text("SalesItem Details") }
+            )
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(16.dp)
+                .fillMaxSize()
+        ) {
+            if (isPortrait) {
+                // Portrait layout
                 OutlinedTextField(
-                    onValueChange = { description = it },
-                    value = description,
+                    value = salesItem.description ?: "",
+                    onValueChange = { },
+                    enabled = false,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                     modifier = Modifier.fillMaxWidth(),
-                    label = { Text("Description") })
+                    label = { Text("Description") }
+                )
+
                 OutlinedTextField(
-                    onValueChange = { priceStr = it },
-                    value = priceStr,
+                    value = "${salesItem.price} DKK" ?: "",
+                    onValueChange = { },
+                    enabled = false,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth(),
-                    label = { Text("Price") })
+                    label = { Text("Price") }
+                )
+
                 OutlinedTextField(
-                    onValueChange = { time = it },
-                    value = time.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    value = dateStr ?: "No date",
+                    onValueChange = { },
+                    enabled = false,
                     modifier = Modifier.fillMaxWidth(),
-                    label = { Text("Date") }) // TODO convert from unix to LocalDateTime
+                    label = { Text("Date Listed") }
+                )
+
                 OutlinedTextField(
-                    onValueChange = { sellerMail = it },
-                    value = sellerMail,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    value = salesItem.sellerEmail ?: "",
+                    onValueChange = { },
+                    enabled = false,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     modifier = Modifier.fillMaxWidth(),
-                    label = { Text("Seller Mail") })
+                    label = { Text("Seller Email") }
+                )
+
                 OutlinedTextField(
-                    onValueChange = { sellerPhone = it },
-                    value = sellerPhone,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    value = salesItem.sellerPhone ?: "",
+                    onValueChange = { },
+                    enabled = false,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                     modifier = Modifier.fillMaxWidth(),
-                    label = { Text("Seller Phone") })
-            }
-                Button(onClick = { onNavigateBack() }) {
+                    label = { Text("Seller Phone") }
+                )
+
+                Button(
+                    onClick = { onNavigateBack() },
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = 16.dp)
+                ) {
+                    Text("Back")
+                }
+            } else {
+                // Landscape layout
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        OutlinedTextField(
+                            value = salesItem.description ?: "",
+                            onValueChange = { },
+                            enabled = false,
+                            modifier = Modifier.fillMaxWidth(),
+                            label = { Text("Description") }
+                        )
+
+                        OutlinedTextField(
+                            value = "${salesItem.price} DKK" ?: "",
+                            onValueChange = { },
+                            enabled = false,
+                            modifier = Modifier.fillMaxWidth(),
+                            label = { Text("Price") }
+                        )
+
+                        OutlinedTextField(
+                            value = dateStr ?: "No date",
+                            onValueChange = { },
+                            enabled = false,
+                            modifier = Modifier.fillMaxWidth(),
+                            label = { Text("Date Listed") }
+                        )
+                    }
+
+                    Column(modifier = Modifier.weight(1f)) {
+                        OutlinedTextField(
+                            value = salesItem.sellerEmail ?: "",
+                            onValueChange = { },
+                            enabled = false,
+                            modifier = Modifier.fillMaxWidth(),
+                            label = { Text("Seller Email") }
+                        )
+
+                        OutlinedTextField(
+                            value = salesItem.sellerPhone ?: "",
+                            onValueChange = { },
+                            enabled = false,
+                            modifier = Modifier.fillMaxWidth(),
+                            label = { Text("Seller Phone") }
+                        )
+                    }
+                }
+
+                Button(
+                    onClick = { onNavigateBack() },
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = 16.dp)
+                ) {
                     Text("Back")
                 }
             }
@@ -148,19 +191,17 @@ fun SalesItemDetails(
     }
 }
 
-
-//@Preview
-//@Composable
-//fun SalesItemDetailsPreview() {
-//    SalesItemDetails(
-//        salesItem = SalesItem(
-//            id = 1,
-//            description = "Bicycle",
-//            price = 1000.0,
-//            sellerMail = "Disney@Disney.com",
-//            sellerPhone = "12345678",
-//            time = LocalDateTime.now(),
-////            pictureUrl = "pictureURL"
-//        )
-//    )
-//}
+@Preview(showBackground = true)
+@Composable
+fun SalesItemDetailsPreview() {
+    SalesItemDetails(
+        salesItem = SalesItem(
+            id = 1,
+            description = "Bicycle",
+            price = 1000,
+            sellerEmail = "Disney@Disney.com",
+            sellerPhone = "12345678",
+            time = System.currentTimeMillis() / 1000
+        )
+    )
+}

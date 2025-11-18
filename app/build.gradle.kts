@@ -57,9 +57,17 @@ dependencies {
     implementation(libs.googleid)
 //    implementation(libs.androidx.compose.animation.core.lint)
     implementation(libs.androidx.compose.ui.text)
-    implementation(platform("androidx.compose:compose-bom:2025.01.00")) // keep ONE BOM
+    implementation(platform("androidx.compose:compose-bom:2025.11.00")) // keep ONE BOM
     implementation("androidx.compose.material:material-icons-extended")
     implementation(libs.androidx.material3) // icons
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

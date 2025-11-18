@@ -1,19 +1,17 @@
 package com.example.mobappdev_mandatoryassignment.model
 
-import java.time.LocalDateTime
-
 data class SalesItem(
-    val id: Int,
+    val id: Int? = null,
     val description: String,
-    val price: Double,
-    val sellerMail: String,
+    val price: Int,
+    val sellerEmail: String,
     val sellerPhone: String,
-    val time: Long = System.currentTimeMillis()/1000,
+    val time: Long? =  System.currentTimeMillis()/1000 ?: null,
 //    val pictureUrl: String
 ) {
     constructor(
         description: String,
-        price: Double,
+        price: Int,
         sellerMail: String,
         sellerPhone: String,
         time: Long = System.currentTimeMillis()/1000,
@@ -23,6 +21,6 @@ data class SalesItem(
     )
 
     override fun toString(): String {
-        return "$id, $description, $price, $sellerMail, $sellerPhone, $time, /*pictureUrl*/"
+        return "$id, $description, $price, $sellerEmail, $sellerPhone, $time, /*pictureUrl*/"
     }
 }

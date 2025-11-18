@@ -27,7 +27,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.mobappdev_mandatoryassignment.model.SalesItem
-import java.time.LocalDateTime
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,15 +34,17 @@ import java.time.LocalDateTime
 fun SalesItemAdd(
     modifier: Modifier = Modifier,
     addSalesItem: (SalesItem) -> Unit = {},
-    onNavigateBack: () -> Unit = {}
+    onNavigateBack: () -> Unit = {},
+    userMail: String = "",
 ) {
     var description by remember { mutableStateOf("") }
     var priceStr by remember { mutableStateOf("") }
-    var sellerMail by remember { mutableStateOf("") }
     var sellerPhone by remember { mutableStateOf("") }
     var descriptionIsError by remember { mutableStateOf(false) }
     var priceIsError by remember { mutableStateOf(false) }
 //    var pictureUrl by remember { mutableStateOf("") }
+
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -72,11 +73,17 @@ fun SalesItemAdd(
                 OutlinedTextField(
                     onValueChange = { priceStr = it },
                     value = priceStr,
-                    // https://medium.com/@GkhKaya00/exploring-keyboard-types-in-kotlin-jetpack-compose-ca1f617e1109
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     isError = priceIsError,
                     modifier = Modifier.fillMaxWidth(),
                     label = { Text(text = "Price") })
+                OutlinedTextField(
+                    onValueChange = { sellerPhone = it },
+                    value = sellerPhone,
+                    // https://medium.com/@GkhKaya00/exploring-keyboard-types-in-kotlin-jetpack-compose-ca1f617e1109
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.fillMaxWidth(),
+                    label = { Text(text = "SellerPhone") })
             } else {
                 Row(
                     modifier = modifier.fillMaxWidth(),
@@ -97,6 +104,13 @@ fun SalesItemAdd(
                         isError = priceIsError,
                         modifier = Modifier.weight(1f),
                         label = { Text(text = "Price") })
+                    OutlinedTextField(
+                        onValueChange = { sellerPhone = it },
+                        value = sellerPhone,
+                        // https://medium.com/@GkhKaya00/exploring-keyboard-types-in-kotlin-jetpack-compose-ca1f617e1109
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text(text = "SellerPhone") })
                 }
             }
             Row(
@@ -123,10 +137,10 @@ fun SalesItemAdd(
                     }
                     val salesItem = SalesItem(
                         description = description,
-                        price = priceStr.toDouble(),
+                        price = priceStr.toInt(),
                         time = (System.currentTimeMillis() / 1000),
                         id = 0,
-                        sellerMail = sellerMail,
+                        sellerEmail = userMail,
                         sellerPhone = sellerPhone,
                     )
                     addSalesItem(salesItem)

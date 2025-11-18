@@ -19,9 +19,9 @@ class SalesItemsViewModel : ViewModel() {
         repository.deleteSalesItem(salesItem.id)
     }
 
-    fun updateSalesItem(salesItemId: Int, salesItem: SalesItem) {
-        repository.updateSalesItem(salesItemId, salesItem)
-    }
+//    fun updateSalesItem(salesItemId: Int, salesItem: SalesItem) {
+//        repository.updateSalesItem(salesItemId, salesItem)
+//    }
 
     fun addSalesItem(salesItem: SalesItem) {
         repository.addSalesItem(salesItem)
@@ -39,12 +39,7 @@ class SalesItemsViewModel : ViewModel() {
         repository.filterSalesItemsByDescription(description)
     }
 
-    fun filterSalesItemsByPrice(minPrice: Double, maxPrice: Double) {
-        repository.filterSalesItemsByPrice(minPrice, maxPrice)
+    fun filterSalesItemsByPrice(maxPrice: Int) {
+        repository.filterSalesItemsByPrice(maxPrice)
     }
 }
-
-
-
-
-    // TODO()

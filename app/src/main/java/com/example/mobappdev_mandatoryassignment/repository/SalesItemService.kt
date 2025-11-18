@@ -17,22 +17,4 @@ interface SalesItemService {
 
     @POST("SalesItems")
     fun addSalesItem(@Body salesItem: SalesItem): Call<SalesItem>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

@@ -77,30 +77,36 @@ class SalesItemsRepository {
         })
     }
 
-    fun deleteSalesItem(id: Int) {
-        Log.d("APPLE", "Delete: $id")
-        salesItemService.deleteSalesItem(id).enqueue(object : Callback<SalesItem> {
-            override fun onResponse(call: Call<SalesItem?>, response: Response<SalesItem?>) {
-                if (response.isSuccessful) {
-                    Log.d("APPLE", "Delete: " + response.body())
-                    errorMessage.value = ""
-                    getSalesItems()
-                } else {
-                    val message = response.code().toString() + " " + response.body()
-                    errorMessage.value = message
-                    Log.e("APPLE", "Not Deleted")
+    fun deleteSalesItem(id: Int?) {
+        if(id == null){
+            Log.e("APPLE", "Id is null")
+        }
+        else{
+            Log.d("APPLE", "Delete: $id")
+            salesItemService.deleteSalesItem(id).enqueue(object : Callback<SalesItem> {
+                override fun onResponse(call: Call<SalesItem?>, response: Response<SalesItem?>) {
+                    if (response.isSuccessful) {
+                        Log.d("APPLE", "Delete: " + response.body())
+                        errorMessage.value = ""
+                        getSalesItems()
+                    } else {
+                        val message = response.code().toString() + " " + response.body()
+                        errorMessage.value = message
+                        Log.e("APPLE", "Not Deleted")
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<SalesItem?>, t: Throwable) {
-                val message = t.message ?: "No connection to back-end"
-                errorMessage.value = message
-                Log.e("APPLE", "Not deleted $message")
-            }
-        })
+                override fun onFailure(call: Call<SalesItem?>, t: Throwable) {
+                    val message = t.message ?: "No connection to back-end"
+                    errorMessage.value = message
+                    Log.e("APPLE", "Not deleted $message")
+                }
+            })
+        }
+
     }
 
-    fun updateSalesItem(salesItemId: Int, salesItem: SalesItem) {
+    /*fun updateSalesItem(salesItemId: Int, salesItem: SalesItem) {
         Log.d("APPLE", "Update: $salesItemId $salesItem")
         salesItemService.updateSalesItem(salesItemId, salesItem).enqueue(object : Callback<SalesItem> {
                 override fun onResponse(call: Call<SalesItem?>, response: Response<SalesItem?>) {
@@ -121,7 +127,7 @@ class SalesItemsRepository {
                     Log.e("APPLE", "Update $message")
                 }
             })
-    }
+    }*/
 
     fun sortSalesItemsByDescription(ascending: Boolean) {
         Log.d("APPLE", "Sort by title")
@@ -148,16 +154,16 @@ class SalesItemsRepository {
             getSalesItems()
             return
         } else {
-            salesItems.value = salesItems.value.filter { it.description.contains(descFragment) }
+            salesItems.value = salesItems.value.filter { it.description.contains(descFragment, ignoreCase = true) }
         }
     }
 
-    fun filterSalesItemsByPrice(minPrice: Double, maxPrice: Double) {
-        if (minPrice == 0.0 && maxPrice == 0.0) {
+    fun filterSalesItemsByPrice(maxPrice: Int) {
+        if (maxPrice == 0) {
             getSalesItems()
             return
         } else {
-            salesItems.value = salesItems.value.filter { it.price in minPrice..maxPrice }
+            salesItems.value = salesItems.value.filter { it.price <= maxPrice }
         }
     }
 }

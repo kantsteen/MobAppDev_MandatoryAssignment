@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
-    salesItemsViewModel: SalesItemsViewModel = SalesItemsViewModel(),
+    salesItemsViewModel: SalesItemsViewModel = viewModel(),
     authViewModel: AuthViewModel = viewModel()
 ) {
     val navController = rememberNavController()
@@ -70,13 +70,13 @@ fun MainScreen(
                 sortByTitle = { salesItemsViewModel.sortSalesItemsByDescription(ascending = it) },
                 sortByPrice = { salesItemsViewModel.sortSalesItemsByPrice(ascending = it) },
                 filterByTitle = { salesItemsViewModel.filterSalesItemsByDescription(it) },
-                filterByPrice = { salesItemsViewModel.filterSalesItemsByPrice(minPrice = it, maxPrice = it) },
+                filterByPrice = { salesItemsViewModel.filterSalesItemsByPrice(maxPrice = it) },
                 onSalesItemsReload = { salesItemsViewModel.getSalesItems() },
                 salesItemsLoading = salesItemsViewModel.isLoadingSalesItem.value,
                 authViewModel = authViewModel,
                 onLoginClick = { navController.navigate(NavRoutes.Authentication.route)},
                 onLogoutClick = { navController.navigate(NavRoutes.SalesItemList.route)},
-                onProfileClick = { navController.navigate(NavRoutes.Profile.route)},
+                //onProfileClick = { navController.navigate(NavRoutes.Profile.route)},
                 onAdd = {
                     val user = FirebaseAuth.getInstance().currentUser
                     if (user == null){
@@ -84,17 +84,17 @@ fun MainScreen(
                     } else {
                         navController.navigate(NavRoutes.SalesItemAdd.route)
                     }
-                }
+                },
+                currentEmail = authViewModel.user?.email
             )
         }
-        composable(
-            NavRoutes.SalesItemDetails.route + "/{salesItemId}",
+        composable("${NavRoutes.SalesItemDetails.route}/{salesItemId}",
             arguments = listOf(navArgument("salesItemId") { type = NavType.IntType })
         ) { backstackEntry ->
-            val salesItemId = backstackEntry.arguments?.getInt("salesItemId")
+            val salesItemId = backstackEntry.arguments?.getInt("salesItemId") ?: return@composable
             val salesItem = salesItems.find { it.id == salesItemId } ?: SalesItem(
                 description = "Not found",
-                price = 0.0,
+                price = 0,
                 sellerMail = "",
                 sellerPhone = "",
                 time = 0,
@@ -111,7 +111,8 @@ fun MainScreen(
             SalesItemAdd(
                 modifier = modifier,
                 addSalesItem = { salesItem -> salesItemsViewModel.addSalesItem(salesItem) },
-                onNavigateBack = { navController.popBackStack() }
+                onNavigateBack = { navController.popBackStack() },
+                userMail = authViewModel.user?.email ?: ""
             )
         }
         composable(NavRoutes.Authentication.route) {

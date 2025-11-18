@@ -1,17 +1,20 @@
 package com.example.mobappdev_mandatoryassignment.screens
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -21,28 +24,27 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.mobappdev_mandatoryassignment.components.AppTopBar
 import com.example.mobappdev_mandatoryassignment.model.AuthViewModel
 import com.example.mobappdev_mandatoryassignment.model.SalesItem
-import java.time.LocalDateTime
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,11 +61,12 @@ fun SalesItemList(
     onAdd: () -> Unit = {},
     onLoginClick: () -> Unit = {},
     onLogoutClick: () -> Unit = {},
-    onProfileClick: () -> Unit = {},
+    //onProfileClick: () -> Unit = {},
     sortByTitle: (up: Boolean) -> Unit = {},
     sortByPrice: (up: Boolean) -> Unit = {},
     filterByTitle: (String) -> Unit = {},
-    filterByPrice: (Double) -> Unit = {}
+    filterByPrice: (Int) -> Unit = {},
+    currentEmail: String? = null
 ) {
     Scaffold(
         modifier = Modifier,
@@ -73,7 +76,7 @@ fun SalesItemList(
                 authViewModel = authViewModel,
                 onLoginClick = onLoginClick,
                 onLogoutClick = onLogoutClick,  // Navigate to login after logout
-                onProfileClick = onProfileClick
+//                onProfileClick = onProfileClick
             )
 //                title = { Text("Sales item list")
 //                    /*val navController = rememberNavController()
@@ -107,10 +110,10 @@ fun SalesItemList(
             onSalesItemSelected = onSalesItemSelected,
             onSalesItemDeleted = onSalesItemDeleted,
             onFilterByTitle = filterByTitle,
-            onFilterByPrice = filterByPrice
+            onFilterByPrice = filterByPrice,
+            currentEmail = currentEmail
         )
     }
-
 }
 
 
@@ -127,7 +130,8 @@ private fun SalesItemListPanel(
     onSalesItemSelected: (SalesItem) -> Unit,
     onSalesItemDeleted: (SalesItem) -> Unit,
     onFilterByTitle: (String) -> Unit,
-    onFilterByPrice: (Double) -> Unit
+    onFilterByPrice: (Int) -> Unit,
+    currentEmail: String? = null
 ) {
     Column(modifier = modifier.padding(8.dp)) {
         if (errorMessage.isNotEmpty()) {
@@ -137,10 +141,10 @@ private fun SalesItemListPanel(
         val titleDown = "title \u2193"
         val priceUp = "price \u2191"
         val priceDown = "price \u2193"
-        var sortTitleAscending by remember { mutableStateOf(true) }
-        var sortPriceAscending by remember { mutableStateOf(true) }
-        var titleFragment by remember { mutableStateOf("") }
-        var priceFragment by remember { mutableStateOf("") }
+        var sortTitleAscending by rememberSaveable { mutableStateOf(true) }
+        var sortPriceAscending by rememberSaveable { mutableStateOf(true) }
+        var titleFragment by rememberSaveable { mutableStateOf("") }
+        var priceFragment by rememberSaveable { mutableStateOf("") }
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             OutlinedTextField(
@@ -149,20 +153,23 @@ private fun SalesItemListPanel(
                 label = { Text("Filter by title") },
                 modifier = Modifier.weight(1f)
             )
-            /*Button(
+            Button(
                 onClick = { onFilterByTitle(titleFragment) },
                 modifier = Modifier.padding(8.dp)
             ) {
                 Text("Filter")
-            }*/
+            }
             OutlinedTextField(
                 value = priceFragment,
                 onValueChange = { priceFragment = it },
-                label = { Text("Filter by price") },
-                modifier = Modifier.weight(1f)
+                label = { Text("Max price") },
+                modifier = Modifier.weight(1f),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
             Button(
-                onClick = { onFilterByTitle(titleFragment); onFilterByPrice(priceFragment.toDouble()) },
+                onClick = {
+                    priceFragment.toIntOrNull()?.let { onFilterByPrice(it) }
+                },
                 modifier = Modifier.padding(8.dp)
             ) {
                 Text("Filter")
@@ -196,10 +203,11 @@ private fun SalesItemListPanel(
         ) {
             LazyVerticalGrid(columns = GridCells.Fixed(columns)) {
                 items(salesItems) { salesItem ->
-                    SalesItem(
+                    SalesItemRow(
                         salesItem,
                         onSalesItemSelected = onSalesItemSelected,
-                        onSalesItemDeleted = onSalesItemDeleted
+                        onSalesItemDeleted = onSalesItemDeleted,
+                        currentEmail = currentEmail
                     )
                 }
             }
@@ -210,16 +218,17 @@ private fun SalesItemListPanel(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SalesItem(
+private fun SalesItemRow(
     salesItem: SalesItem,
     modifier: Modifier = Modifier,
     onSalesItemSelected: (SalesItem) -> Unit = {},
-    onSalesItemDeleted: (SalesItem) -> Unit = {}
+    onSalesItemDeleted: (SalesItem) -> Unit = {},
+    currentEmail: String? = null
 ) {
     Card(
         modifier = modifier
             .padding(4.dp)
-            .fillMaxSize(), onClick = { onSalesItemSelected(salesItem) }) {
+            .fillMaxWidth(), onClick = { onSalesItemSelected(salesItem) }) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -231,13 +240,17 @@ private fun SalesItem(
                 text = salesItem.description + " " + salesItem.price.toString()
             )
             // TODO move delete icon to profile page for user's own listed items
-            /*Icon(
-                imageVector = Icons.Filled.Delete,
-                contentDescription = "Remove" + salesItem.description,
-                modifier = Modifier
-                    .padding(8.dp)
-                    .clickable { onSalesItemDeleted(salesItem) }
-            )*/
+            Log.d("currentEmail", currentEmail.toString() + " " + salesItem.sellerEmail)
+            if (currentEmail != null && currentEmail == salesItem.sellerEmail) {
+                Icon(
+                    imageVector = Icons.Filled.Delete,
+                    contentDescription = "Remove" + salesItem.description,
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .clickable { onSalesItemDeleted(salesItem) }.testTag("delete_item_button")
+                )
+            }
+
         }
     }
 
@@ -251,8 +264,8 @@ fun SalesItemListPreview() {
             SalesItem(
                 id = 1,
                 description = "Bicycle",
-                price = 1000.00,
-                sellerMail = "pizza@mail.com",
+                price = 1000,
+                sellerEmail = "pizza@mail.com",
                 sellerPhone = "12345678",
                 time = 0,
 //                pictureUrl = "URL"
@@ -260,8 +273,8 @@ fun SalesItemListPreview() {
             SalesItem(
                 id = 2,
                 description = "Laptop",
-                price = 4000.00,
-                sellerMail = "pizza@mail.com",
+                price = 4000,
+                sellerEmail = "pizza@mail.com",
                 sellerPhone = "12345678",
                 time = 0,
 //                pictureUrl = "URL"
