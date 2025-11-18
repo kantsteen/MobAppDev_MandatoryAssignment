@@ -26,7 +26,7 @@ class AuthViewModel : ViewModel() {
                 } else {
                     user = null
                     isLoggedIn = false
-                    message = "${task.exception?.message ?: "Unknown error"}"
+                    message = task.exception?.message ?: "Unknown error"
                 }
             }
     }
@@ -48,7 +48,7 @@ class AuthViewModel : ViewModel() {
                     } else {
                         user = null
                         isLoggedIn = false
-                        message = "${task.exception?.message ?: "Unknown error"}"
+                        message = task.exception?.message ?: "Unknown error"
                     }
                 }
         }

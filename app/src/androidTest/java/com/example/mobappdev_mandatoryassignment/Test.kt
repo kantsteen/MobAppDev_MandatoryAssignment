@@ -9,17 +9,10 @@ import androidx.compose.ui.test.filterToOne
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onChild
 import androidx.compose.ui.test.onChildren
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.printToLog
 import com.example.mobappdev_mandatoryassignment.model.SalesItem
 import com.example.mobappdev_mandatoryassignment.screens.SalesItemList
-import kotlinx.coroutines.withTimeout
-import okhttp3.internal.wait
 import org.junit.Rule
 import org.junit.Test
 import kotlin.collections.listOf
@@ -63,7 +56,6 @@ class Test {
         }
         val testItem1 = "Test Item 1"
         val delButtonTag = "delete_item_button"
-        val delButton = rule.onNodeWithTag((delButtonTag))
 
         // find test item 1 and assert it exists
         val item1 = rule.onNode(hasText(testItem1, substring = true)).assertExists()

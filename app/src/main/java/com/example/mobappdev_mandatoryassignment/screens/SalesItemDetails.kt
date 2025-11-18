@@ -76,7 +76,7 @@ fun SalesItemDetails(
             if (isPortrait) {
                 // Portrait layout
                 OutlinedTextField(
-                    value = salesItem.description ?: "",
+                    value = salesItem.description,
                     onValueChange = { },
                     enabled = false,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
@@ -85,7 +85,7 @@ fun SalesItemDetails(
                 )
 
                 OutlinedTextField(
-                    value = "${salesItem.price} DKK" ?: "",
+                    value = "${salesItem.price} DKK",
                     onValueChange = { },
                     enabled = false,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -102,7 +102,7 @@ fun SalesItemDetails(
                 )
 
                 OutlinedTextField(
-                    value = salesItem.sellerEmail ?: "",
+                    value = salesItem.sellerEmail,
                     onValueChange = { },
                     enabled = false,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -111,7 +111,7 @@ fun SalesItemDetails(
                 )
 
                 OutlinedTextField(
-                    value = salesItem.sellerPhone ?: "",
+                    value = salesItem.sellerPhone,
                     onValueChange = { },
                     enabled = false,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
@@ -135,7 +135,7 @@ fun SalesItemDetails(
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         OutlinedTextField(
-                            value = salesItem.description ?: "",
+                            value = salesItem.description,
                             onValueChange = { },
                             enabled = false,
                             modifier = Modifier.fillMaxWidth(),
@@ -143,7 +143,7 @@ fun SalesItemDetails(
                         )
 
                         OutlinedTextField(
-                            value = "${salesItem.price} DKK" ?: "",
+                            value = "${salesItem.price} DKK",
                             onValueChange = { },
                             enabled = false,
                             modifier = Modifier.fillMaxWidth(),
@@ -161,7 +161,7 @@ fun SalesItemDetails(
 
                     Column(modifier = Modifier.weight(1f)) {
                         OutlinedTextField(
-                            value = salesItem.sellerEmail ?: "",
+                            value = salesItem.sellerEmail,
                             onValueChange = { },
                             enabled = false,
                             modifier = Modifier.fillMaxWidth(),
@@ -169,7 +169,7 @@ fun SalesItemDetails(
                         )
 
                         OutlinedTextField(
-                            value = salesItem.sellerPhone ?: "",
+                            value = salesItem.sellerPhone,
                             onValueChange = { },
                             enabled = false,
                             modifier = Modifier.fillMaxWidth(),

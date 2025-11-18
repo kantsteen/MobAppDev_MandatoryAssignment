@@ -106,29 +106,6 @@ class SalesItemsRepository {
 
     }
 
-    /*fun updateSalesItem(salesItemId: Int, salesItem: SalesItem) {
-        Log.d("APPLE", "Update: $salesItemId $salesItem")
-        salesItemService.updateSalesItem(salesItemId, salesItem).enqueue(object : Callback<SalesItem> {
-                override fun onResponse(call: Call<SalesItem?>, response: Response<SalesItem?>) {
-                    if (response.isSuccessful) {
-                        Log.d("APPLE", "Update: " + response.body())
-                        errorMessage.value = ""
-                        Log.d("APPLE", "Update succesful")
-                        getSalesItems()
-                    } else {
-                        val message = response.code().toString() + " " + response.body()
-                        errorMessage.value = message
-                    }
-                }
-
-                override fun onFailure(call: Call<SalesItem?>, t: Throwable) {
-                    val message = t.message ?: "No connection to back-end"
-                    errorMessage.value = message
-                    Log.e("APPLE", "Update $message")
-                }
-            })
-    }*/
-
     fun sortSalesItemsByDescription(ascending: Boolean) {
         Log.d("APPLE", "Sort by title")
         if (ascending) {

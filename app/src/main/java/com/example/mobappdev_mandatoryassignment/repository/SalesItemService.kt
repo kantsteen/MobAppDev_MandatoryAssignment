@@ -12,9 +12,6 @@ interface SalesItemService {
     @DELETE("SalesItems/{salesItemId}")
     fun deleteSalesItem(@Path("salesItemId") id: Int): Call<SalesItem>
 
-    @PUT("SalesItems/{salesItemId}")
-    fun updateSalesItem(@Path("salesItemId") id: Int, @Body salesItem: SalesItem): Call<SalesItem>
-
     @POST("SalesItems")
     fun addSalesItem(@Body salesItem: SalesItem): Call<SalesItem>
 }
